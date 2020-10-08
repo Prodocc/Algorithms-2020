@@ -3,6 +3,8 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.util.Arrays;
+
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
@@ -81,9 +83,15 @@ public class JavaAlgorithms {
      *
      * Общий комментарий: решение из Википедии для этой задачи принимается,
      * но приветствуется попытка решить её самостоятельно.
+     * Трудоемкость: O(menNumber)
+     * Ресурсоемкость: O(1)
      */
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        int result = 1;
+        for (int i = 2; i <= menNumber; i++) {
+            result = (choiceInterval + result - 1) % i + 1;
+        }
+        return result;
     }
 
     /**
@@ -96,9 +104,47 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
+     * Трудоемкость: O(n * m),
+     * Ресурсоемкость: O(n * m)
      */
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+        if (firs.isEmpty() || second.isEmpty()) {
+            return "";
+        }
+        int row = firs.length() + 1;
+        int column = second.length() + 1;
+        int[][] array = new int[row][column];
+        for (int i = 1; i < row; i++) {
+            array[i][0] = firs.charAt(i - 1);
+        }
+        for (int j = 1; j < column; j++) {
+            array[0][j] = second.charAt(j - 1);
+        }
+        int max = 0;
+        int maxIndexColumn = 0;
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < column; j++) {
+                if (array[0][j] == array[i][0]) {
+                    if (i > 1 && j > 1) {
+                        array[i][j] = array[i - 1][j - 1] + 1;
+                        if (max < array[i][j]) {
+                            max = array[i][j];
+                            maxIndexColumn = i;
+                        }
+                    } else {
+                        array[i][j] = 1;
+                    }
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (max > 0) {
+            sb.append((char) array[maxIndexColumn][0]);
+            maxIndexColumn--;
+            max--;
+        }
+        sb.reverse();
+        return sb.toString();
     }
 
     /**
@@ -110,8 +156,32 @@ public class JavaAlgorithms {
      *
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
+     * Трудоемкость: O(n * log(log(n))), n - limit
+     * Ресурсоемкость: O(n)
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        if (limit <= 1) {
+            return 0;
+        }
+        boolean[] array = new boolean[limit + 1];
+        Arrays.fill(array, true);
+        array[0] = false;
+        array[1] = false;
+        for (int i = 2; i < array.length; i++) {
+            if (array[i]) {
+                int j = 2;
+                while (j * i < array.length) {
+                    array[j * i] = false;
+                    j++;
+                }
+            }
+        }
+        int result = 0;
+        for (boolean elem : array) {
+            if (elem) {
+                result += 1;
+            }
+        }
+        return result;
     }
 }
