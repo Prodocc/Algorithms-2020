@@ -1,5 +1,7 @@
 package lesson1;
 
+import kotlin.NotImplementedError;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -75,7 +77,7 @@ public class JavaTasks {
 
             Sorts.quickSort(arr);
 
-            try (FileWriter out = new FileWriter(outputName)) {
+            try (FileWriter out = new FileWriter(new File(outputName))) {
                 for (int i = 0; i < arr.length; i++) {
                     hours = arr[i] / 3600;
                     minutes = arr[i] / 60 % 60;
@@ -125,19 +127,7 @@ public class JavaTasks {
      * Ресурсоемкость
      */
     static public void sortAddresses(String inputName, String outputName) {
-        List<String> list = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File(inputName))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (!line.matches("([а-яА-Я]+)\\s([а-яА-Я]+)\\s-\\s([а-яА-Я]+)\\s\\d")) {
-                    throw new IllegalArgumentException();
-                }
-                list.add(line);
-            }
-            System.out.println(list);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        throw new NotImplementedError();
     }
 
     /**
