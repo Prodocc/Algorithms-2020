@@ -1,6 +1,7 @@
 package lesson4;
 
 import java.util.*;
+
 import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -82,18 +83,78 @@ public class Trie extends AbstractSet<String> implements Set<String> {
         return false;
     }
 
+
     /**
      * Итератор для префиксного дерева
-     *
+     * <p>
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
-     *
+     * <p>
      * Сложная
      */
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new TrieIterator();
     }
 
+    private class TrieIterator implements Iterator<String> {
+
+        List<String> list = new ArrayList<>();
+        private int currIndex = 0;
+        private int removeCount = 1;
+
+        private TrieIterator() {
+            ordering(root, "");
+        }
+
+
+        /**
+         * Трудоемкость O(n) - n = current_word.length
+         * Ресурсоемкость O(1)
+         */
+        @Override
+        public void remove() {
+            if (removeCount-- == 0 || currIndex == 0) {
+                removeCount = 1;
+                throw new IllegalStateException();
+            }
+            Trie.this.remove(list.get(--currIndex));
+            list.remove(currIndex);
+        }
+
+
+        /**
+         * Трудоемкость O(1)
+         * Ресурсоемкость O(1)
+         */
+        @Override
+        public boolean hasNext() {
+            return currIndex < list.size();
+        }
+
+        /**
+         * Трудоемкость O(1)
+         * Ресурсоемкость O(1)
+         */
+        @Override
+        public String next() {
+            if (!hasNext()) {
+                throw new IllegalStateException();
+            }
+            return list.get(currIndex++);
+        }
+
+        private void ordering(Node root, String str) {
+            if (root.children == null) {
+                return;
+            }
+            for (Map.Entry<Character, Node> entry : root.children.entrySet()) {
+                if (entry.getKey() == (char) 0) {
+                    list.add(str);
+                }
+                ordering(entry.getValue(), str + entry.getKey());
+            }
+        }
+
+    }
 }

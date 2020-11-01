@@ -43,7 +43,7 @@ public class JavaTasks {
      * Трудоемкость O(n * log(n))
      * Ресурсоемкость O(n)
      */
-    static public void sortTimes(String inputName, String outputName) {
+    static public void sortTimes(String inputName, String outputName) throws IOException {
         List<String> list = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(inputName))) {
             while (scanner.hasNextLine()) {
@@ -93,8 +93,6 @@ public class JavaTasks {
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -162,24 +160,24 @@ public class JavaTasks {
      * Трудоемкость O(n)
      * Ресурсоемкость O(n)
      */
-    static public void sortTemperatures(String inputName, String outputName) {
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
         List<Double> list = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(inputName))) {
             while (scanner.hasNext()) {
                 double number = Double.parseDouble(scanner.next());
                 list.add(number);
             }
-
+            System.out.println(list + " list");
             int[] arr = new int[list.size()];
             for (int i = 0; i < arr.length; i++) {
-                arr[i] = (int) ((1000 + list.get(i)) * 10);
+                arr[i] = (int) (2730 + list.get(i) * 10);
             }
 
-            arr = Sorts.countingSort(arr, 77300);
+            arr = Sorts.countingSort(arr, 7730); //7730 - длина диапазона чисел, для сортировки подсчётом(2730 + 5000, min и max температура соответственно)
 
             double[] resultArray = new double[list.size()];
             for (int i = 0; i < resultArray.length; i++) {
-                resultArray[i] = (double) (arr[i] - 10000) / 10;
+                resultArray[i] = (double) (arr[i] - 2730) / 10;
             }
 
             try (FileWriter out = new FileWriter(outputName)) {
@@ -187,8 +185,6 @@ public class JavaTasks {
                     out.write(resultArray[i] + "\n");
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -220,10 +216,10 @@ public class JavaTasks {
      * 2
      * 2
      * 2
-     * Трудоемкость O(n + m), m - длина последовательности минимального числа
+     * Трудоемкость O(n)
      * Ресурсоемкость O(n)
      */
-    static public void sortSequence(String inputName, String outputName) {
+    static public void sortSequence(String inputName, String outputName) throws IOException {
         List<Integer> list = new ArrayList<>();
         Map<Integer, Integer> map = new HashMap<>();
         try (Scanner scanner = new Scanner(new File(inputName))) {
@@ -237,8 +233,6 @@ public class JavaTasks {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         int maxValue = 0;
@@ -259,8 +253,6 @@ public class JavaTasks {
             for (int i = 0; i < maxValue; i++) {
                 out.write(minKey + "\n");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -285,8 +277,8 @@ public class JavaTasks {
         int sIndex = first.length;
         int rIndex = 0;
         while (rIndex < sIndex) {
-            if (fIndex == first.length) {
-                System.arraycopy(second, sIndex, second, rIndex, second.length - sIndex);
+            if (fIndex == first.length) {                                                       //зная что каждый массив по отдельности уже отсортирован ,при сравнении элементов дойдя до конца одного из массивов
+                System.arraycopy(second, sIndex, second, rIndex, second.length - sIndex);//мы можем сразу копировать всю оставщуюся часть другого массива в конец результирующего
                 break;
             }
             if (sIndex == second.length) {
